@@ -28,17 +28,3 @@ categories.forEach(function (category) {
     if (module.exports[category][name].once) module.exports[category][name].once(module.exports)
   })
 })
-
-var upnp = module.exports.subscribers.upnp
-upnp.init()
-upnp.Subscribe({ host     : '192.168.1.109'
-               , port     : 1400
-               , endPoint : '/DeviceProperties/Event'
-               , method   : 'NOTIFY'
-               , verboseP : true
-               }).on('message', function(options, message) {
-console.log('\nindex\noptions=' + JSON.stringify(options, null, 2))
-console.log('message=' + JSON.stringify(message, null, 2))
-this.destroy()
-})
-
