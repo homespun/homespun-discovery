@@ -1,5 +1,5 @@
 { "name"                         : "homespun-discovery"
-, "version"                      : "0.1.1"
+, "version"                      : "0.1.2"
 , "description"                  : "discover devices and services on the local network."
 , "main"                         : "index.js"
 , "scripts"                      : { "lint" : "jshint package.json *.js */*.js" }

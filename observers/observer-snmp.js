@@ -10,9 +10,9 @@ var dgram        = require('dgram')
 var logger, observers, snmp
 
 var init = function (log) {
-  if (snmp) done()
-
   logger = log || { error: console.error }
+  if (snmp) return
+
   snmp = new SNMP()
   observers = []
 }
@@ -39,10 +39,10 @@ var Observe = function (options) {    /* { sysObjectIDs: ['1.3.6.1....' ... ] } 
   self._options = underscore.clone(options)
   if (!self._options.sysObjectIDs) throw new Error('options.sysObjectIDs is missing')
   if (!util.isArray(self._options.sysObjectIDs)) throw new Error('options.sysObjectIDs not an array')
-  self._options.sysObjectIDs.forEach(function (sysObjectId) {
-    sysObjectId.split('.').forEach(function (n) {
+  self._options.sysObjectIDs.forEach(function (sysObjectID) {
+    sysObjectID.split('.').forEach(function (n) {
       if (typeof n === 'string') n = parseInt(n, 10)
-      if ((n < 0) || (!Number.isFinite(n))) throw new Error('invalid sysObjectID: ' + sysObjectId)
+      if ((n < 0) || (!Number.isFinite(n))) throw new Error('invalid sysObjectID: ' + sysObjectID)
     })
   })
 
@@ -83,7 +83,7 @@ var SNMP = function () {
     self.emit('error', err)
   }).on('message', function (buffer, rinfo) {
     var bindings
-      , oidS = Browser.prototype.oidS
+      , oidS = Observe.prototype.oidS
       , packet = snmpn.parse(buffer)
       , response = { host: rinfo.address, port: rinfo.port, packet: packet }
 
@@ -94,7 +94,6 @@ var SNMP = function () {
     if (bindings[1].type !== 6) return
 
     bindings.forEach(function (binding) {
-
       binding.oid = oidS(binding.oid)
       if (binding.type === 6) binding.value = oidS(binding.value)
       delete binding.valueHex
@@ -131,7 +130,7 @@ SNMP.prototype.find = function (options, onUp) {
 
 SNMP.prototype.update = function () {
   var data
-    , oidI = Browser.prototype.oidI
+    , oidI = Observe.prototype.oidI
     , packet = new snmpn.Packet()
 
 
@@ -171,7 +170,7 @@ Browser.prototype.start = function () {
   if (self._onResponse) return
 
   self._onResponse = function (response) {
-    if (self._options.sysObjectIds.indexOf(response.packet.pdu.varbinds[1].value) !== -1) {
+    if (self._options.sysObjectIDs.indexOf(response.packet.pdu.varbinds[1].value) !== -1) {
       self.emit('up', self._options, response)
     }
   }
