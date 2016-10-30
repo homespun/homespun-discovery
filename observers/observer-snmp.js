@@ -32,9 +32,8 @@ var Observe = function (options) {    /* { sysObjectIDs: ['1.3.6.1....' ... ] } 
   var self = this
   EventEmitter.call(self)
 
-  var onUp = function(service) { self.emit('up', self._options, service) }
-  var onDown = function(service) { self.emit('down', self._options, service) }
-  var onError = function(service) { self.emit('error', self._options, service) }
+  var onUp = function(options, service) { self.emit('up', self._options, service) }
+  var onError = function(options, err) { self.emit('error', self._options, err) }
 
   self._options = underscore.clone(options)
   if (!self._options.sysObjectIDs) throw new Error('options.sysObjectIDs is missing')
@@ -46,7 +45,7 @@ var Observe = function (options) {    /* { sysObjectIDs: ['1.3.6.1....' ... ] } 
     })
   })
 
-  self._browser = snmp.find(self._options, onUp).on('up', onUp).on('down', onDown).on('error', onError)
+  self._browser = snmp.find(self._options, onUp).on('up', onUp).on('error', onError)
 
   observers.push(self)
 }
@@ -174,7 +173,7 @@ Browser.prototype.start = function () {
       self.emit('up', self._options, response)
     }
   }
-  self._onError = function (err) { self.emit('error', err) }
+  self._onError = function (err) { self.emit('error', self._options, err) }
 
   self._snmp.on('response', self._onResponse).on('error', self._onError)
 
