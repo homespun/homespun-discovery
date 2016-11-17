@@ -11,9 +11,9 @@ var EventEmitter = require('events').EventEmitter
 var arp, logger, observers
 
 var init = function (log) {
-  if (arp) done()
-
   logger = log || { error: console.error }
+  if (arp) return
+
   arp = new ARP()
   observers = []
 }

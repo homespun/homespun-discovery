@@ -8,9 +8,9 @@ var EventEmitter = require('events').EventEmitter
 var bonjour, logger, observers
 
 var init = function (log) {
-  if (bonjour) done()
-
   logger = log || { error: console.error }
+  if (bonjour) return
+
   bonjour = require('bonjour')()
   observers = []
 }

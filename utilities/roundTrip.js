@@ -14,7 +14,7 @@ module.exports = function (options, params, callback) {
                                          { 'content-type': 'application/json; charset=utf-8', 'accept-encoding': '' })
   }
 
-  request = client.request(underscore.omit(params, [ 'useProxy', 'payload' ]), function (response) {
+  request = client.request(underscore.omit(params, [ 'useProxy', 'payload', 'rawP' ]), function (response) {
     var body = ''
 
     if (timeoutP) return
@@ -41,7 +41,7 @@ module.exports = function (options, params, callback) {
       }
 
       try {
-        payload = (response.statusCode !== 204) ? JSON.parse(body) : null
+        payload = (params.rawP) ? body : (response.statusCode !== 204) ? JSON.parse(body) : null
       } catch (err) {
         return callback(err)
       }

@@ -9,9 +9,9 @@ var dgram        = require('dgram')
 var logger, observers, ssdp
 
 var init = function (log) {
-  if (ssdp) done()
-
   logger = log || { error: console.error }
+  if (ssdp) return
+
   ssdp = new SSDP()
   observers = []
 }
@@ -31,9 +31,9 @@ var Observe = function (options) {    /* { contains: 'string' } */
   var self = this
   EventEmitter.call(self)
 
-  var onUp = function(service) { self.emit('up', self._options, service) }
+  var onUp = function(options, service) { self.emit('up', self._options, service) }
   var onDown = function(service) { self.emit('down', self._options, service) }
-  var onError = function(service) { self.emit('error', self._options, service) }
+  var onError = function(options, err) { self.emit('error', self._options, err) }
 
   self._options = underscore.clone(options)
   if (!self._options.contains) throw new Error('options.contains is missing')
@@ -181,6 +181,7 @@ Browser.prototype.start = function () {
   underscore.keys(self._ssdp.usns).forEach(function (usn) {
     var entry = self._ssdp.usns[usn]
 
+console.log('usn=' + usn + ' expires<=now=' + (entry.expires <= now))
     if (entry.expires <= now) return self._onResponse(entry.response)
 
     delete self._ssdp.usns[usn]
