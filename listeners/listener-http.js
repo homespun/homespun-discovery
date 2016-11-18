@@ -5,15 +5,15 @@ var EventEmitter = require('events').EventEmitter
   , os           = require('os')
   , url          = require('url')
   , util         = require('util')
+  , uuid         = require('node-uuid')
 
-var logger, subscribers, http
+var logger, http
 
 var init = function (log) {
+  logger = log || { error: console.error }
   if (http) done()
 
-  logger = log || { error: console.error }
   http = new HTTP()
-  subscribers = []
 }
 
 var singleton = function (options) {
@@ -26,7 +26,6 @@ var singleton = function (options) {
 var done = function () {
   if (!http) return
 
-  (subscribers || []).forEach(function (subscriber) { subscriber.destroy.bind(subscriber)() })
   http.destroy()
   http = null
 }
@@ -121,6 +120,16 @@ HTTP.prototype.server = function (ifentry) {
     self.servers.push({ ifentry: ifentry, location: location, server: server })
   })
   server.listen()
+}
+
+HTTP.prototype.addEvent = function (method) {
+  var locations = []
+  var path = '/' + uuid.v4()
+  var eventName = method + ' ' + path
+
+  this.eventNames.push(eventName)
+  this.servers.forEach(function (server) { locations.push(server.location) })
+  return { eventName: eventName, path: path, locations: locations }
 }
 
 
