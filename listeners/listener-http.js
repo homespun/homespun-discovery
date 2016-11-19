@@ -123,13 +123,13 @@ HTTP.prototype.server = function (ifentry) {
 }
 
 HTTP.prototype.addEvent = function (method) {
-  var locations = []
+  var servers = []
   var path = '/' + uuid.v4()
   var eventName = method + ' ' + path
 
   this.eventNames.push(eventName)
-  this.servers.forEach(function (server) { locations.push(server.location) })
-  return { eventName: eventName, path: path, locations: locations }
+  this.servers.forEach(function (server) { servers.push(underscore.pick(server, [ 'ifentry', 'location' ])) })
+  return { eventName: eventName, path: path, servers: servers }
 }
 
 
