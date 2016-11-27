@@ -74,6 +74,8 @@ module.exports =
 , noise           : { field     : 'noise',           type : 'float',       units : 'decibels'
                     , abbrev    : 'dB'
                     , readings  : [ readingAbove(60.0) ]                                             }
+, o3              : { field     : 'o3',              type : 'float',       units : 'ppb'
+                    , name      : 'ozone'                                                            }
 , opened          : { field     : 'opened',          type : 'boolean'
                     , readings  : true                                                               }
 , 'particles.2_5' : { field     : 'particles.2_5',   type : 'float'
@@ -96,6 +98,8 @@ module.exports =
                     , aggregate : 'none'                                                             }
 , smoke           : { field     : 'smoke',           type : 'float',       units : 'ppm'             }
 , 'smoke.σ'       : { field     : 'smoke.σ',         type : 'float',       units : 'sigmas'          }
+, so2             : { field     : 'so2',             type : 'float',       units : 'ppb'
+                    , name      : 'SO\u2082'                                                         }
 , sonority        : { field     : 'sonority',        type : 'percentage'                             }
 , tamper_detected : { field     : 'tamper_detected', type : 'boolean'
                     , readings  : [ readingEquals(true) ]                                            }
