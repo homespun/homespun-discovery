@@ -1,5 +1,5 @@
 { "name"                         : "homespun-discovery"
-, "version"                      : "0.1.9"
+, "version"                      : "0.1.10"
 , "description"                  : "discover devices and services on the local network."
 , "main"                         : "index.js"
 , "scripts"                      : { "lint" : "jshint package.json *.js */*.js" }
@@ -17,11 +17,11 @@
   , "bonjour"                    : "3.5.0"
   , "glob"                       : "^7.0.6"
   , "multicast-dns"              : "^6.0.1"
-  , "node-uuid"                  : "1.4.7"
   , "pcap2"                      : "3.0.4"
   , "pluralize"                  : "3.0.0"
   , "snmp-native"                : "1.0.18"
   , "underscore"                 : "1.8.3"
+  , "uuid"                       : "3.0.0"
   , "xml2js"                     : "~0.2.8"
   }
 }

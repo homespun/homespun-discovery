@@ -5,7 +5,7 @@ var EventEmitter = require('events').EventEmitter
   , os           = require('os')
   , url          = require('url')
   , util         = require('util')
-  , uuid         = require('node-uuid')
+  , uuid         = require('uuid')
 
 var logger, http
 

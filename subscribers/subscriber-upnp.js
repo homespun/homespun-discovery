@@ -9,7 +9,7 @@ var listener, roundTrip
   , underscore   = require('underscore')
   , url          = require('url')
   , util         = require('util')
-  , uuid         = require('node-uuid')
+  , uuid         = require('uuid')
   , xml2js       = require('xml2js')
 
 
