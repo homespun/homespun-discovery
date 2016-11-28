@@ -12,7 +12,7 @@ var readingEquals = function (value) {
 
 module.exports =
 { altitude        : { field     : 'altitude',        type : 'float',       units : 'meters'
-                    , domain    : { lower : -130.0, upper : 10870 }                                  }
+                    , domain    : { lower : -130.0, upper : 10870.0 }                                }
 , airflow         : { field     : 'airflow',         type : 'float',       units : 'meters/second'
                     , domain    : { lower :    0.0, upper : 135.0 }                                  }
 , aqi             : { field     : 'aqi',             type : 'percentage'
@@ -25,14 +25,14 @@ module.exports =
 , brightness      : { field     : 'brightness',      type : 'percentage'                             }
 , co              : { field     : 'co',              type : 'float',       units : 'ppm'
                     , name      : 'CO'
-                    , domain    : { lower :    0.0, upper : 100.0 }
-                    , readings  : [ readingAbove(1.0) ]                                              }
+                    , domain    : { lower :    0.0, upper : 200.0 }
+                    , readings  : [ readingAbove(5.0) ]                                              }
 // most likely MQ-7
 , 'co.σ'          : { field     : 'co.σ',            type : 'float',       units : 'sigmas'          }
 , co2             : { field     : 'co2',             type : 'float',       units : 'ppm'
                     , name      : 'CO\u2082'
-                    , domain    : { lower :  350.0, upper : 5000.0 }
-                    , readings  : [ readingAbove(1200.0) ]                                           }
+                    , domain    : { lower :    0.0, upper : 15000.0 }
+                    , readings  : [ readingAbove(5000.0) ]                                           }
 , 'co2.σ'         : { field     : 'co2.σ',           type : 'float',       units : 'sigmas'          }
 , distance        : { field     : 'distance',        type : 'float',       units : 'meters'
                     , domain    : { lower :    0.0, upper : 50000.0 }                                }
@@ -69,13 +69,15 @@ module.exports =
                     , name      : 'NO'                                                               }
 , 'no.σ'          : { field     : 'no.σ',            type : 'float',       units : 'sigmas'          }
 , no2             : { field     : 'no2',             type : 'float',       units : 'ppm'
-                    , name      : 'NO\u2082'                                                         }
+                    , name      : 'NO\u2082'
+                    , readings  : [ readingAbove(5.0) ]                                              }
 , 'no2.σ'         : { field     : 'no2.σ',           type : 'float',       units : 'sigmas'          }
 , noise           : { field     : 'noise',           type : 'float',       units : 'decibels'
                     , abbrev    : 'dB'
                     , readings  : [ readingAbove(60.0) ]                                             }
 , o3              : { field     : 'o3',              type : 'float',       units : 'ppb'
-                    , name      : 'ozone'                                                            }
+                    , name      : 'ozone'
+                    , readings  : [ readingAbove(100.0) ]                                            }
 , opened          : { field     : 'opened',          type : 'boolean'
                     , readings  : true                                                               }
 , 'particles.2_5' : { field     : 'particles.2_5',   type : 'float'
@@ -99,7 +101,8 @@ module.exports =
 , smoke           : { field     : 'smoke',           type : 'float',       units : 'ppm'             }
 , 'smoke.σ'       : { field     : 'smoke.σ',         type : 'float',       units : 'sigmas'          }
 , so2             : { field     : 'so2',             type : 'float',       units : 'ppb'
-                    , name      : 'SO\u2082'                                                         }
+                    , name      : 'SO\u2082'
+                    , readings  : [ readingAbove(5000.0) ]                                           }
 , sonority        : { field     : 'sonority',        type : 'percentage'                             }
 , tamper_detected : { field     : 'tamper_detected', type : 'boolean'
                     , readings  : [ readingEquals(true) ]                                            }
@@ -117,7 +120,7 @@ module.exports =
                     , domain    : { lower :    0.0, upper : 135.0 }                                  }
 , vibration       : { field     : 'vibration',       type : 'boolean'
                     , readings  : true                                                               }
-, voc             : { field     : 'voc',             type : 'float',       units : 'ppm'
+, voc             : { field     : 'voc',             type : 'float',       units : 'ppb'
                     , name      : 'Volatile Organics'
                     , readings  : [ readingAbove(1.0) ]                                              }
 , windheading     : { field     : 'windheading',     type : 'float',       units : 'degrees'
