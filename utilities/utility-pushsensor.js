@@ -1,4 +1,4 @@
-/* jshint asi: true */
+/* jshint asi: true, node: true, laxbreak: true, laxcomma: true, undef: true, unused: true */
 
 var underscore  = require('underscore')
 
@@ -89,6 +89,11 @@ Sensor.prototype._setServices = function (accessory) {
             service.getCharacteristic(Characteristic.CarbonMonoxideLevel)
                    .on('get', function (callback) { self._getState.bind(self)('co', callback) })
            })
+          findOrCreateService(Service.AirQualitySensor, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
+            service.getCharacteristic(Characteristic.CarbonMonoxideLevel)
+                   .on('get', function (callback) { self._getState.bind(self)('co', callback) })
+           })
          }
 
     , co2:
@@ -97,6 +102,11 @@ Sensor.prototype._setServices = function (accessory) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Carbon Dioxide')
             service.getCharacteristic(Characteristic.CarbonDioxideDetected)
                    .on('get', function (callback) { self._getState.bind(self)('co2_detected', callback) })
+            service.getCharacteristic(Characteristic.CarbonDioxideLevel)
+                   .on('get', function (callback) { self._getState.bind(self)('co2', callback) })
+           })
+          findOrCreateService(Service.AirQualitySensor, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
             service.getCharacteristic(Characteristic.CarbonDioxideLevel)
                    .on('get', function (callback) { self._getState.bind(self)('co2', callback) })
            })
@@ -129,6 +139,11 @@ Sensor.prototype._setServices = function (accessory) {
             service.getCharacteristic(CommunityTypes.NitrogenDioxideLevel)
                    .on('get', function (callback) { self._getState.bind(self)('no2', callback) })
            })
+          findOrCreateService(Service.AirQualitySensor, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
+            service.getCharacteristic(Characteristic.NitrogenDioxideDensity)
+                   .on('get', function (callback) { self._getState.bind(self)('no2', callback) })
+           })
          }
 
     , o3:
@@ -151,6 +166,8 @@ Sensor.prototype._setServices = function (accessory) {
                    .on('get', function (callback) { self._getState.bind(self)('aqi', callback) })
             service.getCharacteristic(Characteristic.AirParticulateDensity)
                    .on('get', function (callback) { self._getState.bind(self)('particles.2_5', callback) })
+            service.getCharacteristic(Characteristic.PM2_5Density)
+                   .on('get', function (callback) { self._getState.bind(self)('particles.2_5', callback) })
           })
         }
 
@@ -161,6 +178,11 @@ Sensor.prototype._setServices = function (accessory) {
             service.getCharacteristic(CommunityTypes.SodiumDioxideDetected)
                    .on('get', function (callback) { self._getState.bind(self)('so2_detected', callback) })
             service.getCharacteristic(CommunityTypes.SodiumDioxideLevel)
+                   .on('get', function (callback) { self._getState.bind(self)('so2', callback) })
+           })
+          findOrCreateService(Service.AirQualitySensor, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
+            service.getCharacteristic(Characteristic.SulphurDioxideDensity)
                    .on('get', function (callback) { self._getState.bind(self)('so2', callback) })
            })
          }
@@ -186,10 +208,15 @@ Sensor.prototype._setServices = function (accessory) {
     , voc:
         function () {
           findOrCreateService(CommunityTypes.VolatileOrganicCompoundSensor, function (service) {
-            service.setCharacteristic(Characteristic.Name, self.name + ' Sodium Dioxide')
+            service.setCharacteristic(Characteristic.Name, self.name + ' Volatile Organic Compound')
             service.getCharacteristic(CommunityTypes.VolatileOrganicCompoundDetected)
                    .on('get', function (callback) { self._getState.bind(self)('voc_detected', callback) })
             service.getCharacteristic(CommunityTypes.VolatileOrganicCompoundLevel)
+                   .on('get', function (callback) { self._getState.bind(self)('voc', callback) })
+           })
+          findOrCreateService(Service.AirQualitySensor, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
+            service.getCharacteristic(Characteristic.VOCDensity)
                    .on('get', function (callback) { self._getState.bind(self)('voc', callback) })
            })
          }
@@ -219,12 +246,14 @@ Sensor.prototype._update = function (readings) {
         function () {
           setCharacteristic(Service.CarbonMonoxideSensor, Characteristic.CarbonMonoxideDetected, 'co_detected')
           setCharacteristic(Service.CarbonMonoxideSensor, Characteristic.CarbonMonoxideLevel, 'co')
+          setCharacteristic(Service.AirQualitySensor, Characteristic.CarbonMonoxideLevel, 'co')
         }
 
      , co2:
         function () {
           setCharacteristic(Service.CarbonDioxideSensor, Characteristic.CarbonDioxideDetected, 'co2_detected')
           setCharacteristic(Service.CarbonDioxideSensor, Characteristic.CarbonDioxideLevel, 'co2')
+          setCharacteristic(Service.AirQualitySensor, Characteristic.CarbonDioxideLevel, 'co2')
         }
 
      , humidity:
@@ -241,6 +270,7 @@ Sensor.prototype._update = function (readings) {
         function () {
           setCharacteristic(CommunityTypes.NitrogenDioxideSensor, CommunityTypes.NitrogenDioxideDetected, 'no2_detected')
           setCharacteristic(CommunityTypes.NitrogenDioxideSensor, CommunityTypes.NitrogenDioxideLevel, 'no2')
+          setCharacteristic(Service.AirQualitySensor, Characteristic.NitrogenDioxideDensity, 'no2')
         }
 
      , o3:
@@ -252,7 +282,8 @@ Sensor.prototype._update = function (readings) {
      , particulate:
         function () {
           setCharacteristic(Service.AirQualitySensor, Characteristic.AirQuality, 'aqi')
-          setCharacteristic(Service.AirQualitySensor, Characteristic.AirParticulateDensity, 'particulate')
+          setCharacteristic(Service.AirQualitySensor, Characteristic.AirParticulateDensity, 'particles.2_5')
+          setCharacteristic(Service.AirQualitySensor, Characteristic.PM2_5Density, 'particles.2_5')
         }
 
      , pressure:
@@ -264,6 +295,7 @@ Sensor.prototype._update = function (readings) {
         function () {
           setCharacteristic(CommunityTypes.SodiumDioxideSensor, CommunityTypes.SodiumDioxideDetected, 'so2_detected')
           setCharacteristic(CommunityTypes.SodiumDioxideSensor, CommunityTypes.SodiumDioxideLevel, 'so2')
+          setCharacteristic(Service.AirQualitySensor, Characteristic.SulphurDioxideDensity, 'so2')
         }
 
     , temperature:
@@ -276,6 +308,7 @@ Sensor.prototype._update = function (readings) {
           setCharacteristic(CommunityTypes.VolatileOrganicCompoundSensor, CommunityTypes.VolatileOrganicCompoundDetected,
                             'voc_detected')
           setCharacteristic(CommunityTypes.VolatileOrganicCompoundSensor, CommunityTypes.VolatileOrganicCompoundLevel, 'voc')
+          setCharacteristic(Service.AirQualitySensor, Characteristic.VOCDensity, 'voc')
         }
     }[key]
     if (f) f()

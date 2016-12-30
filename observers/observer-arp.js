@@ -1,4 +1,4 @@
-/* jshint asi: true */
+/* jshint asi: true, node: true, laxbreak: true, laxcomma: true, undef: true, unused: true */
 
 var EventEmitter = require('events').EventEmitter
   , arpa         = require('arp-a')
