@@ -99,6 +99,8 @@ module.exports =
                     , domain    : { lower :  945.0, upper : 1081.0 }                                 }
 , rainfall        : { field     : 'rainfall',        type : 'float',       units : 'millimeters'
                     , domain    : { lower :    0.0, upper : 1000.0 }                                 }
+, ringing         : { field     : 'ringing',         type : 'boolean'
+                    , readings  : true                                                               }
 , signal          : { field     : 'signal',          type : 'percentage'
                     , aggregate : 'none'                                                             }
 , smoke           : { field     : 'smoke',           type : 'float',       units : 'ppm'             }
