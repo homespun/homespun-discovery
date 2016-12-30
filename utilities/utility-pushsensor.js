@@ -80,7 +80,25 @@ Sensor.prototype._setServices = function (accessory) {
 
   underscore.keys(self.capabilities).forEach(function (key) {
     var f =
-    { co:
+    { battery_level:
+      function () {
+        findOrCreateService(Service.BatteryService, function (service) {
+          service.setCharacteristic(Characteristic.Name, self.name + ' Battery')
+          service.getCharacteristic(Characteristic.BatteryLevel)
+                 .on('get', function (callback) { self._getState.bind(self)(key, callback) })
+        })
+      }
+
+    , battery_low:
+      function () {
+        findOrCreateService(Service.BatteryService, function (service) {
+          service.setCharacteristic(Characteristic.Name, self.name + ' Battery')
+          service.getCharacteristic(Characteristic.StatusLowBattery)
+                 .on('get', function (callback) { self._getState.bind(self)(key, callback) })
+        })
+      }
+
+    , co:
         function () {
           findOrCreateService(Service.CarbonMonoxideSensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Carbon Monoxide')
@@ -92,7 +110,7 @@ Sensor.prototype._setServices = function (accessory) {
           findOrCreateService(Service.AirQualitySensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
             service.getCharacteristic(Characteristic.CarbonMonoxideLevel)
-                   .on('get', function (callback) { self._getState.bind(self)('co', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
          }
 
@@ -103,12 +121,12 @@ Sensor.prototype._setServices = function (accessory) {
             service.getCharacteristic(Characteristic.CarbonDioxideDetected)
                    .on('get', function (callback) { self._getState.bind(self)('co2_detected', callback) })
             service.getCharacteristic(Characteristic.CarbonDioxideLevel)
-                   .on('get', function (callback) { self._getState.bind(self)('co2', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
           findOrCreateService(Service.AirQualitySensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
             service.getCharacteristic(Characteristic.CarbonDioxideLevel)
-                   .on('get', function (callback) { self._getState.bind(self)('co2', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
          }
 
@@ -117,7 +135,7 @@ Sensor.prototype._setServices = function (accessory) {
           findOrCreateService(Service.HumiditySensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Humidity')
             service.getCharacteristic(Characteristic.CurrentRelativeHumidity)
-                   .on('get', function (callback) { self._getState.bind(self)('humidity', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
          }
 
@@ -126,9 +144,18 @@ Sensor.prototype._setServices = function (accessory) {
           findOrCreateService(Service.LightSensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Light')
             service.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
-                   .on('get', function (callback) { self._getState.bind(self)('light', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
          }
+
+    , motion_detected:
+      function () {
+          findOrCreateService(Service.MotionSensor, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Motion')
+            service.getCharacteristic(Characteristic.MotionDetected)
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
+           })
+      }
 
     , no2:
         function () {
@@ -137,12 +164,12 @@ Sensor.prototype._setServices = function (accessory) {
             service.getCharacteristic(CommunityTypes.NitrogenDioxideDetected)
                    .on('get', function (callback) { self._getState.bind(self)('no2_detected', callback) })
             service.getCharacteristic(CommunityTypes.NitrogenDioxideLevel)
-                   .on('get', function (callback) { self._getState.bind(self)('no2', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
           findOrCreateService(Service.AirQualitySensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
             service.getCharacteristic(Characteristic.NitrogenDioxideDensity)
-                   .on('get', function (callback) { self._getState.bind(self)('no2', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
          }
 
@@ -153,7 +180,7 @@ Sensor.prototype._setServices = function (accessory) {
             service.getCharacteristic(CommunityTypes.OzoneDetected)
                    .on('get', function (callback) { self._getState.bind(self)('o3_detected', callback) })
             service.getCharacteristic(CommunityTypes.OzoneLevel)
-                   .on('get', function (callback) { self._getState.bind(self)('o3', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
          }
 
@@ -171,6 +198,29 @@ Sensor.prototype._setServices = function (accessory) {
           })
         }
 
+     , pressure:
+        function () {
+          findOrCreateService(CommunityTypes.AtmosphericPressureSensor, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Atmospheric Pressure')
+            service.getCharacteristic(CommunityTypes.AtmosphericPressureLevel)
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
+           })
+         }
+
+    , reachability:
+      function () {
+        // nothing to do!
+      }
+
+    , ringing:
+      function () {
+        findOrCreateService(Service.Doorbell, function (service) {
+          service.setCharacteristic(Characteristic.Name, self.name)
+          service.getCharacteristic(Characteristic.ProgrammableSwitchEvent)
+                 .on('get', function (callback) { self._getState.bind(self)(key, callback) })
+        })
+      }
+
     , so2:
         function () {
           findOrCreateService(CommunityTypes.SodiumDioxideSensor, function (service) {
@@ -178,21 +228,12 @@ Sensor.prototype._setServices = function (accessory) {
             service.getCharacteristic(CommunityTypes.SodiumDioxideDetected)
                    .on('get', function (callback) { self._getState.bind(self)('so2_detected', callback) })
             service.getCharacteristic(CommunityTypes.SodiumDioxideLevel)
-                   .on('get', function (callback) { self._getState.bind(self)('so2', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
           findOrCreateService(Service.AirQualitySensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
             service.getCharacteristic(Characteristic.SulphurDioxideDensity)
-                   .on('get', function (callback) { self._getState.bind(self)('so2', callback) })
-           })
-         }
-
-     , pressure:
-        function () {
-          findOrCreateService(CommunityTypes.AtmosphericPressureSensor, function (service) {
-            service.setCharacteristic(Characteristic.Name, self.name + ' Atmospheric Pressure')
-            service.getCharacteristic(CommunityTypes.AtmosphericPressureLevel)
-                   .on('get', function (callback) { self._getState.bind(self)('pressure', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
          }
 
@@ -201,7 +242,7 @@ Sensor.prototype._setServices = function (accessory) {
           findOrCreateService(Service.TemperatureSensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Temperature')
             service.getCharacteristic(Characteristic.CurrentTemperature)
-                   .on('get', function (callback) { self._getState.bind(self)('temperature', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
           })
         }
 
@@ -212,12 +253,12 @@ Sensor.prototype._setServices = function (accessory) {
             service.getCharacteristic(CommunityTypes.VolatileOrganicCompoundDetected)
                    .on('get', function (callback) { self._getState.bind(self)('voc_detected', callback) })
             service.getCharacteristic(CommunityTypes.VolatileOrganicCompoundLevel)
-                   .on('get', function (callback) { self._getState.bind(self)('voc', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
           findOrCreateService(Service.AirQualitySensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
             service.getCharacteristic(Characteristic.VOCDensity)
-                   .on('get', function (callback) { self._getState.bind(self)('voc', callback) })
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
          }
     }[key] || function () { self.platform.log.warn('setServices: no Service for ' + key) }
@@ -228,6 +269,7 @@ Sensor.prototype._setServices = function (accessory) {
 Sensor.prototype._update = function (readings) {
   var self = this
 
+console.log('\n' + JSON.stringify(readings, null, 2) + '\n')
   var accessory = self.accessory
 
   var setCharacteristic = function (P, Q, property) {
@@ -242,41 +284,56 @@ Sensor.prototype._update = function (readings) {
 
   underscore.keys(readings).forEach(function (key) {
     var f =
-    { co:
+    { battery_level:
+      function () {
+        setCharacteristic(Service.BatteryService, Characteristic.BatteryLevel, key)
+      }
+
+    , battery_low:
+      function () {
+        setCharacteristic(Service.BatteryService, Characteristic.StatusLowBattery, key)
+      }
+
+    , co:
         function () {
           setCharacteristic(Service.CarbonMonoxideSensor, Characteristic.CarbonMonoxideDetected, 'co_detected')
-          setCharacteristic(Service.CarbonMonoxideSensor, Characteristic.CarbonMonoxideLevel, 'co')
-          setCharacteristic(Service.AirQualitySensor, Characteristic.CarbonMonoxideLevel, 'co')
+          setCharacteristic(Service.CarbonMonoxideSensor, Characteristic.CarbonMonoxideLevel, key)
+          setCharacteristic(Service.AirQualitySensor, Characteristic.CarbonMonoxideLevel, key)
         }
 
      , co2:
         function () {
           setCharacteristic(Service.CarbonDioxideSensor, Characteristic.CarbonDioxideDetected, 'co2_detected')
-          setCharacteristic(Service.CarbonDioxideSensor, Characteristic.CarbonDioxideLevel, 'co2')
-          setCharacteristic(Service.AirQualitySensor, Characteristic.CarbonDioxideLevel, 'co2')
+          setCharacteristic(Service.CarbonDioxideSensor, Characteristic.CarbonDioxideLevel, key)
+          setCharacteristic(Service.AirQualitySensor, Characteristic.CarbonDioxideLevel, key)
         }
 
      , humidity:
         function () {
-          setCharacteristic(Service.HumiditySensor, Characteristic.CurrentRelativeHumidity, 'humidity')
+          setCharacteristic(Service.HumiditySensor, Characteristic.CurrentRelativeHumidity, key)
         }
 
      , light:
         function () {
-          setCharacteristic(Service.LightSensor, Characteristic.CurrentAmbientLightLevel, 'light')
+          setCharacteristic(Service.LightSensor, Characteristic.CurrentAmbientLightLevel, key)
         }
+
+    , motion_detected:
+      function () {
+          setCharacteristic(Service.MotionSensor, Characteristic.MotionDetected, key)
+      }
 
      , no2:
         function () {
           setCharacteristic(CommunityTypes.NitrogenDioxideSensor, CommunityTypes.NitrogenDioxideDetected, 'no2_detected')
-          setCharacteristic(CommunityTypes.NitrogenDioxideSensor, CommunityTypes.NitrogenDioxideLevel, 'no2')
-          setCharacteristic(Service.AirQualitySensor, Characteristic.NitrogenDioxideDensity, 'no2')
+          setCharacteristic(CommunityTypes.NitrogenDioxideSensor, CommunityTypes.NitrogenDioxideLevel, key)
+          setCharacteristic(Service.AirQualitySensor, Characteristic.NitrogenDioxideDensity, key)
         }
 
      , o3:
         function () {
           setCharacteristic(CommunityTypes.OzoneSensor, CommunityTypes.OzoneDetected, 'o3_detected')
-          setCharacteristic(CommunityTypes.OzoneSensor, CommunityTypes.OzoneLevel, 'o3')
+          setCharacteristic(CommunityTypes.OzoneSensor, CommunityTypes.OzoneLevel, key)
         }
 
      , particulate:
@@ -288,27 +345,37 @@ Sensor.prototype._update = function (readings) {
 
      , pressure:
         function () {
-          setCharacteristic(CommunityTypes.AtmosphericPressureSensor, CommunityTypes.AtmosphericPressureLevel, 'pressure')
+          setCharacteristic(CommunityTypes.AtmosphericPressureSensor, CommunityTypes.AtmosphericPressureLevel, key)
         }
+
+    , reachability:
+      function () {
+        self._getState('reachability', function (err, value) { self.accessory.updateReachability(value) })
+      }
+
+    , ringing:
+      function () {
+          setCharacteristic(Service.Doorbell, Characteristic.ProgrammableSwitchEvent, key)
+      }
 
      , so2:
         function () {
           setCharacteristic(CommunityTypes.SodiumDioxideSensor, CommunityTypes.SodiumDioxideDetected, 'so2_detected')
-          setCharacteristic(CommunityTypes.SodiumDioxideSensor, CommunityTypes.SodiumDioxideLevel, 'so2')
-          setCharacteristic(Service.AirQualitySensor, Characteristic.SulphurDioxideDensity, 'so2')
+          setCharacteristic(CommunityTypes.SodiumDioxideSensor, CommunityTypes.SodiumDioxideLevel, key)
+          setCharacteristic(Service.AirQualitySensor, Characteristic.SulphurDioxideDensity, key)
         }
 
     , temperature:
         function () {
-          setCharacteristic(Service.TemperatureSensor, Characteristic.CurrentTemperature, 'temperature')
+          setCharacteristic(Service.TemperatureSensor, Characteristic.CurrentTemperature, key)
         }
 
      , voc:
         function () {
           setCharacteristic(CommunityTypes.VolatileOrganicCompoundSensor, CommunityTypes.VolatileOrganicCompoundDetected,
                             'voc_detected')
-          setCharacteristic(CommunityTypes.VolatileOrganicCompoundSensor, CommunityTypes.VolatileOrganicCompoundLevel, 'voc')
-          setCharacteristic(Service.AirQualitySensor, Characteristic.VOCDensity, 'voc')
+          setCharacteristic(CommunityTypes.VolatileOrganicCompoundSensor, CommunityTypes.VolatileOrganicCompoundLevel, key)
+          setCharacteristic(Service.AirQualitySensor, Characteristic.VOCDensity, key)
         }
     }[key]
     if (f) f()

@@ -24,6 +24,7 @@ module.exports =
 , 'aqi.σ'         : { field     : 'aqi.σ',           type : 'float',       units : 'sigmas'          }
 , battery         : { field     : 'battery',         type : 'percentage'
                     , aggregate : 'none'                                                             }
+, battery_low     : { field     : 'battery_low',     type : 'boolean'                                }
 , brightness      : { field     : 'brightness',      type : 'percentage'                             }
 , co              : { field     : 'co',              type : 'float',       units : 'ppm'
                     , name      : 'CO'
@@ -65,7 +66,7 @@ module.exports =
 // most likely MQ-5
 , 'methane.σ'     : { field     : 'methane.σ',       type : 'float',       units : 'sigmas'          }
 , moisture        : { field     : 'moisture',        type : 'percentage'                             }
-, motion          : { field     : 'motion',          type : 'boolean'
+, motion_detected : { field     : 'motion_detected', type : 'boolean'
                     , readings  : true                                                               }
 , no              : { field     : 'no',              type : 'float',       units : 'ppm'
                     , name      : 'NO'                                                               }
