@@ -33,7 +33,12 @@ module.exports = function (options, params, callback) {
           console.log('>>> ' + header + ': ' + response.headers[header])
         })
         console.log('>>>')
-        console.log('>>> ' + body.split('\n').join('\n>>> '))
+        try {
+          payload = (params.rawP) ? body : JSON.stringify(JSON.parse(body), null, 2)
+        } catch (ex) {
+          payload = body
+        }
+        console.log('>>> ' + payload.split('\n').join('\n>>> '))
       }
       if (Math.floor(response.statusCode / 100) !== 2) {
         options.logger.error('_roundTrip error: HTTP response ' + response.statusCode)
@@ -58,7 +63,7 @@ module.exports = function (options, params, callback) {
     timeoutP = true
     callback(new Error('timeout'))
   })
-  if (params.payload) request.write(JSON.stringify(params.payload))
+  if (params.payload) request.write(typeof params.payload !== 'string' ? JSON.stringify(params.payload) : params.payload)
   request.end()
 
   if (!options.verboseP) return
@@ -66,5 +71,8 @@ module.exports = function (options, params, callback) {
   console.log('<<< ' + params.method + ' ' + params.protocol + '//' + params.hostname + params.path)
   underscore.keys(params.headers).forEach(function (header) { console.log('<<< ' + header + ': ' + params.headers[header]) })
   console.log('<<<')
-  if (params.payload) console.log('<<< ' + JSON.stringify(params.payload, null, 2).split('\n').join('\n<<< '))
+  if (params.payload) {
+    console.log('<<< ' + (typeof params.payload !== 'string' ? JSON.stringify(params.payload, null, 2)
+                                                             : params.payload).split('\n').join('\n<<< '))
+  }
 }
