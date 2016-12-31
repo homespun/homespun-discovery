@@ -215,7 +215,7 @@ Sensor.prototype._setServices = function (accessory) {
     , ringing:
       function () {
         findOrCreateService(Service.Doorbell, function (service) {
-          service.setCharacteristic(Characteristic.Name, self.name)
+          service.setCharacteristic(Characteristic.Name, self.name + ' Door Bell')
           service.getCharacteristic(Characteristic.ProgrammableSwitchEvent)
                  .on('get', function (callback) { self._getState.bind(self)(key, callback) })
         })
