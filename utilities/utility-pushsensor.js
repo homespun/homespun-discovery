@@ -269,7 +269,6 @@ Sensor.prototype._setServices = function (accessory) {
 Sensor.prototype._update = function (readings) {
   var self = this
 
-console.log('\n' + JSON.stringify(readings, null, 2) + '\n')
   var accessory = self.accessory
 
   var setCharacteristic = function (P, Q, property) {
