@@ -182,6 +182,11 @@ Sensor.prototype._setServices = function (accessory) {
             service.getCharacteristic(CommunityTypes.OzoneLevel)
                    .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
+          findOrCreateService(Service.AirQualitySensor, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Air Quality')
+            service.getCharacteristic(Characteristic.OzoneDensity)
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
+           })
          }
 
      , 'particles.2_5':
@@ -333,6 +338,7 @@ Sensor.prototype._update = function (readings) {
         function () {
           setCharacteristic(CommunityTypes.OzoneSensor, CommunityTypes.OzoneDetected, 'o3_detected')
           setCharacteristic(CommunityTypes.OzoneSensor, CommunityTypes.OzoneLevel, key)
+          setCharacteristic(Service.AirQualitySensor, Characteristic.OzoneDensity, key)
         }
 
      , particulate:
