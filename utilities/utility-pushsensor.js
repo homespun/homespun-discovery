@@ -56,11 +56,21 @@ Sensor.prototype.attachAccessory = function (accessory) {
 Sensor.prototype._setServices = function (accessory) {
   var self = this
 
+  var updateP
+
   var findOrCreateService = function (P, callback) {
-    var newP
+    var newP, p
     var service = accessory.getService(P)
 
-    if (!service) {
+    if (service) {
+      p = new P()
+      p.optionalCharacteristics.forEach(function (c) {
+        if (service.getCharacteristic(c.displayName)) return
+
+        updateP = true
+        service.addOptionalCharacteristic(c)
+      })
+    } else {
       newP = true
       service = new P()
     }
@@ -269,6 +279,8 @@ Sensor.prototype._setServices = function (accessory) {
     }[key] || function () { self.platform.log.warn('setServices: no Service for ' + key) }
     f()
   })
+
+  return updateP
 }
 
 Sensor.prototype._update = function (readings) {
