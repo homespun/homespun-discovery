@@ -41,8 +41,8 @@ module.exports = function (options, params, callback) {
         console.log('>>> ' + payload.split('\n').join('\n>>> '))
       }
       if (Math.floor(response.statusCode / 100) !== 2) {
-        options.logger.error('_roundTrip error: HTTP response ' + response.statusCode)
-        return callback(new Error('HTTP response ' + response.statusCode))
+        options.logger.error('_roundTrip error: HTTP response ' + response.statusCode + ' ' + (response.statusMessage || ''))
+        return callback(new Error('HTTP response ' + response.statusCode + ' ' + (response.statusMessage || '')))
       }
 
       try {
