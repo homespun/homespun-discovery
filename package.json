@@ -1,6 +1,10 @@
 { "name"                         : "homespun-discovery"
-, "version"                      : "0.1.22"
+, "version"                      : "0.1.24"
 , "description"                  : "discover devices and services on the local network."
+, "author"                       :
+  { "name"                       : "Marshall Rose"
+  , "email"                      : "mrose17@homespun.io"
+  }
 , "main"                         : "index.js"
 , "scripts"                      : { "lint" : "jshint package.json *.js */*.js" }
 , "license"                      : "MIT"
@@ -13,7 +17,7 @@
 , "engines"                      :
   { "node"                       : ">=0.12.0" }
 , "dependencies"                 :
-  { "arp-a"                      : "0.5.1"
+  { "arp-a"                      : "0.5.2"
   , "bonjour"                    : "3.5.0"
   , "glob"                       : "^7.0.6"
   , "multicast-dns"              : "^6.0.1"

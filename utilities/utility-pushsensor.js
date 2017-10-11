@@ -53,6 +53,10 @@ Sensor.prototype.attachAccessory = function (accessory) {
            underscore.pick(this, [ 'uuid', 'name', 'manufacturer', 'model', 'serialNumber', 'firmwareRevision' ]))
 }
 
+Sensor.prototype.getAccessoryService = function (P) {
+  return this.accessory && this.accessory.getService(P)
+}
+
 Sensor.prototype._setServices = function (accessory) {
   var self = this
 
@@ -154,6 +158,15 @@ Sensor.prototype._setServices = function (accessory) {
           findOrCreateService(Service.LightSensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Light')
             service.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
+           })
+         }
+
+     , lightbulb:
+        function () {
+          findOrCreateService(Service.Lightbulb, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Light')
+            service.getCharacteristic(Characteristic.On)
                    .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
          }
@@ -332,6 +345,11 @@ Sensor.prototype._update = function (readings) {
      , light:
         function () {
           setCharacteristic(Service.LightSensor, Characteristic.CurrentAmbientLightLevel, key)
+        }
+
+     , lightbulb:
+        function () {
+          setCharacteristic(Service.Lightbulb, Characteristic.On, key)
         }
 
     , motion_detected:
