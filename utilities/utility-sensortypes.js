@@ -41,6 +41,8 @@ module.exports =
                     , domain    : { lower :    0.0, upper : 50000.0 }                                }
 , flame_detected  : { field     : 'flame_detected',  type : 'boolean'
                     , readings  : true                                                               }
+, floodlight      : { field     : 'floodlight',      type : 'boolean'
+                    , readings  : true                                                               }
 , 'flow.σ'        : { field     : 'flow.σ',          type : 'float',       units : 'sigmas'          }
 // most likely MQ-5 (LPG)
 , 'gas.σ'         : { field     : 'gas.σ',           type : 'float',       units : 'sigmas'          }

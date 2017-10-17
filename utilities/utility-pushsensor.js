@@ -144,6 +144,15 @@ Sensor.prototype._setServices = function (accessory) {
            })
          }
 
+     , floodlight:
+        function () {
+          findOrCreateService(Service.Lightbulb, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Floodlight')
+            service.getCharacteristic(Characteristic.On)
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
+           })
+         }
+
      , humidity:
         function () {
           findOrCreateService(Service.HumiditySensor, function (service) {
@@ -158,15 +167,6 @@ Sensor.prototype._setServices = function (accessory) {
           findOrCreateService(Service.LightSensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Light')
             service.getCharacteristic(Characteristic.CurrentAmbientLightLevel)
-                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
-           })
-         }
-
-     , lightbulb:
-        function () {
-          findOrCreateService(Service.Lightbulb, function (service) {
-            service.setCharacteristic(Characteristic.Name, self.name + ' Light')
-            service.getCharacteristic(Characteristic.On)
                    .on('get', function (callback) { self._getState.bind(self)(key, callback) })
            })
          }
@@ -312,6 +312,8 @@ Sensor.prototype._update = function (readings) {
   }
 
   underscore.keys(readings).forEach(function (key) {
+    if (typeof readings[key] === 'undefined') return
+
     var f =
     { battery_level:
       function () {
@@ -337,6 +339,11 @@ Sensor.prototype._update = function (readings) {
           setCharacteristic(Service.AirQualitySensor, Characteristic.CarbonDioxideLevel, key)
         }
 
+     , floodlight:
+        function () {
+          setCharacteristic(Service.Lightbulb, Characteristic.On, key)
+        }
+
      , humidity:
         function () {
           setCharacteristic(Service.HumiditySensor, Characteristic.CurrentRelativeHumidity, key)
@@ -347,15 +354,10 @@ Sensor.prototype._update = function (readings) {
           setCharacteristic(Service.LightSensor, Characteristic.CurrentAmbientLightLevel, key)
         }
 
-     , lightbulb:
-        function () {
-          setCharacteristic(Service.Lightbulb, Characteristic.On, key)
-        }
-
     , motion_detected:
-      function () {
+        function () {
           setCharacteristic(Service.MotionSensor, Characteristic.MotionDetected, key)
-      }
+        }
 
      , no2:
         function () {
