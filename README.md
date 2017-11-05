@@ -20,3 +20,11 @@ and try
     % sudo npm install -g homespun-discovery
 
 again!
+
+NB: If you install homebridge like this:
+
+    sudo npm install -g --unsafe-perm homebridge
+
+Then all subsequent installations must be like this:
+
+    sudo npm install -g --unsafe-perm homespun-discovery
