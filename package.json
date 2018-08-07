@@ -21,6 +21,7 @@
   , "bonjour"                    : "3.5.0"
   , "glob"                       : "^7.0.6"
   , "multicast-dns"              : "^6.0.1"
+  , "pcap2"                      : "3.0.4"
   , "pluralize"                  : "3.0.0"
   , "snmp-native"                : "1.0.18"
   , "underscore"                 : "1.8.3"
