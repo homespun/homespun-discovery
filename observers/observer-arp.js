@@ -3,7 +3,7 @@
 var EventEmitter = require('events').EventEmitter
   , arpa         = require('arp-a')
   , os           = require('os')
-  , pcap2        = require('pcap2')
+  , pcap         = require('pcap')
   , underscore   = require('underscore')
   , util         = require('util')
 
@@ -141,8 +141,8 @@ var IFace = function (arp, ifname) {
   var self = this
 
   try {
-    self.session = new pcap2.Session(ifname, { filter: 'arp' }).on('packet', function(raw) {
-      var frame = pcap2.decode.packet(raw)
+    self.session = new pcap.Session(ifname, { filter: 'arp' }).on('packet', function(raw) {
+      var frame = pcap.decode.packet(raw)
         , packet = frame && frame.link && frame.link.arp
 
       if ((!packet)
