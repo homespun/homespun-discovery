@@ -296,7 +296,7 @@ Sensor.prototype._setServices = function (accessory) {
   return updateP
 }
 
-Sensor.prototype._update = function (readings) {
+Sensor.prototype._update = function (readings, silentP) {
   var self = this
 
   var accessory = self.accessory
@@ -312,7 +312,8 @@ Sensor.prototype._update = function (readings) {
   }
 
   underscore.keys(readings).forEach(function (key) {
-    if (typeof readings[key] === 'undefined') return
+    if ((typeof readings[key] === 'undefined')
+          || ((silentP) && (key !== 'reachability') && (typeof self.capabilities[key] === 'undefined'))) return
 
     var f =
     { battery_level:
