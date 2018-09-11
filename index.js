@@ -1,6 +1,7 @@
 /* jshint asi: true, node: true, laxbreak: true, laxcomma: true, undef: true, unused: true */
 
 var glob         = require('glob')
+var package      = require('./package.json')
 var path         = require('path')
 var pluralize    = require('pluralize')
 var underscore   = require('underscore')
@@ -8,7 +9,8 @@ var underscore   = require('underscore')
 
 module.exports = {}
 
-var categories = [ 'listeners', 'observers', 'subscribers', 'utilities' ]
+var categories = (package.name !== 'homespun-utilities') ? [ 'listeners', 'observers', 'subscribers', 'utilities' ]
+                                                         : [ 'utilities' ]
 
 categories.forEach(function (category) {
   var singular = pluralize(category, 1)

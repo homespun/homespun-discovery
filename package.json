@@ -1,7 +1,7 @@
 {
-  "name": "homespun-discovery",
+  "name": "homespun-utilities",
   "version": "0.2.1",
-  "description": "discover devices and services on the local network.",
+  "description": "the utilities branch of homespun-discovery.",
   "author": {
     "name": "Marshall Rose",
     "email": "mrose17@homespun.io"
@@ -13,12 +13,8 @@
   "license": "MIT",
   "keywords": [
     "homespun",
-    "discovery",
-    "arp",
-    "bonjour",
-    "snmp",
-    "ssdp",
-    "upnp",
+    "utilities",
+    "sensors",
     "homebridge"
   ],
   "repository": {
@@ -32,15 +28,9 @@
     "node": ">=0.12.0"
   },
   "dependencies": {
-    "arp-a": "0.5.2",
-    "bonjour": "3.5.0",
     "glob": "^7.0.6",
-    "multicast-dns": "^6.0.1",
-    "pcap": "git+https://github.com/node-pcap/node_pcap.git",
+    "hap-nodejs-community-types": "https://github.com/homespun/hap-nodejs-community-types.git",
     "pluralize": "3.0.0",
-    "snmp-native": "1.0.18",
-    "underscore": "1.8.3",
-    "uuid": "3.0.0",
-    "xml2js": "~0.2.8"
+    "underscore": "1.8.3"
   }
 }
