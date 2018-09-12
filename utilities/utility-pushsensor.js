@@ -144,6 +144,15 @@ Sensor.prototype._setServices = function (accessory) {
            })
          }
 
+     , contact:
+       function () {
+          findOrCreateService(Service.Contact, function (service) {
+            service.setCharacteristic(Characteristic.Name, self.name + ' Contact')
+            service.getCharacteristic(Characteristic.ContactSensorState)
+                   .on('get', function (callback) { self._getState.bind(self)(key, callback) })
+           })
+       }
+
      , floodlight:
         function () {
           findOrCreateService(Service.Lightbulb, function (service) {
@@ -339,6 +348,11 @@ Sensor.prototype._update = function (readings, silentP) {
           setCharacteristic(Service.CarbonDioxideSensor, Characteristic.CarbonDioxideLevel, key)
           setCharacteristic(Service.AirQualitySensor, Characteristic.CarbonDioxideLevel, key)
         }
+
+     , contact:
+       function () {
+          setCharacteristic(Service.Contact, Characteristic.ContactSensorState, key)
+       }
 
      , floodlight:
         function () {
