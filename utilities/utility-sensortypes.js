@@ -37,6 +37,8 @@ module.exports =
                     , domain    : { lower :    0.0, upper : 15000.0 }
                     , readings  : [ readingAbove(5000.0) ]                                           }
 , 'co2.σ'         : { field     : 'co2.σ',           type : 'float',       units : 'sigmas'          }
+, contact         : { field     : 'contact',         type : 'boolean'
+                    , readings  : true                                                               }
 , distance        : { field     : 'distance',        type : 'float',       units : 'meters'
                     , domain    : { lower :    0.0, upper : 50000.0 }                                }
 , flame_detected  : { field     : 'flame_detected',  type : 'boolean'
