@@ -146,7 +146,7 @@ Sensor.prototype._setServices = function (accessory) {
 
      , contact:
        function () {
-          findOrCreateService(Service.Contact, function (service) {
+          findOrCreateService(Service.ContactSensor, function (service) {
             service.setCharacteristic(Characteristic.Name, self.name + ' Contact')
             service.getCharacteristic(Characteristic.ContactSensorState)
                    .on('get', function (callback) { self._getState.bind(self)(key, callback) })
@@ -351,7 +351,7 @@ Sensor.prototype._update = function (readings, silentP) {
 
      , contact:
        function () {
-          setCharacteristic(Service.Contact, Characteristic.ContactSensorState, key)
+          setCharacteristic(Service.ContactSensor, Characteristic.ContactSensorState, key)
        }
 
      , floodlight:
