@@ -22,7 +22,7 @@ module.exports =
                     , readings  : [ readingBelow(0.11), readingAbove(0.19) ]                         }
 // most likely MQ-135
 , 'aqi.σ'         : { field     : 'aqi.σ',           type : 'float',       units : 'sigmas'          }
-, battery         : { field     : 'battery',         type : 'percentage'
+, battery_level   : { field     : 'battery_level',   type : 'percentage'
                     , aggregate : 'none'                                                             }
 , battery_low     : { field     : 'battery_low',     type : 'boolean'                                }
 , brightness      : { field     : 'brightness',      type : 'percentage'                             }
