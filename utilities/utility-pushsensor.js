@@ -316,7 +316,7 @@ Sensor.prototype._update = function (readings, silentP) {
     if (!service) return self.platform.log.warn('update: no Service for ' + property)
 
     self._getState(property, function (err, value) {
-      service.setCharacteristic(Q, value)
+      service.getCharacteristic(Q).updateValue(value)
     })
   }
 
