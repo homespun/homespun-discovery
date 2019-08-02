@@ -1,6 +1,7 @@
 /* jshint asi: true, node: true, laxbreak: true, laxcomma: true, undef: true, unused: true */
 
-var underscore = require('underscore')
+var querystring = require('querystring')
+var underscore  = require('underscore')
 
 module.exports = function (options, params, callback) {
   var request, timeoutP
@@ -13,6 +14,7 @@ module.exports = function (options, params, callback) {
     params.headers = underscore.defaults(params.headers || {},
                                          { 'content-type': 'application/json; charset=utf-8', 'accept-encoding': '' })
   }
+  if (options.location.query) params.path += '?' + querystring.stringify(options.location.query)
 
   request = client.request(underscore.omit(params, [ 'useProxy', 'payload', 'rawP' ]), function (response) {
     var body = ''
