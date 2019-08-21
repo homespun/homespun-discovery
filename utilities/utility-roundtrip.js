@@ -24,6 +24,7 @@ module.exports = function (options, params, callback) {
       body += chunk.toString()
     }).on('end', function () {
       var payload
+        , okP = Math.floor(response.statusCode / 100) === 2
 
       if (params.timeout) request.setTimeout(0)
 
@@ -42,15 +43,19 @@ module.exports = function (options, params, callback) {
         }
         console.log('>>> ' + payload.split('\n').join('\n>>> '))
       }
-      if (Math.floor(response.statusCode / 100) !== 2) {
-        options.logger.error('_roundTrip error: HTTP response ' + response.statusCode + ' ' + (response.statusMessage || ''))
-        return callback(new Error('HTTP response ' + response.statusCode + ' ' + (response.statusMessage || '')))
-      }
 
       try {
         payload = (params.rawP) ? body : ((response.statusCode !== 204) && body) ? JSON.parse(body) : null
-      } catch (err) {
-        return callback(err)
+      } catch (ex) {
+        if (okP) return callback(ex, response, body)
+
+        payload = body
+      }
+
+      if (!okP) {
+        options.logger.error('_roundTrip error: HTTP response ' + response.statusCode + ' ' + (response.statusMessage || ''))
+        return callback(new Error('HTTP response ' + response.statusCode + ' ' + (response.statusMessage || '')),
+                        response, payload)
       }
 
       try {
