@@ -36,7 +36,7 @@ module.exports = function (options, params, callback) {
         })
         console.log('>>>')
         try {
-          payload = (params.rawP) ? body : JSON.stringify(JSON.parse(body), null, 2)
+          payload = (params.rawP) ? body : (body && JSON.stringify(JSON.parse(body), null, 2))
         } catch (ex) {
           payload = body
         }
@@ -48,7 +48,7 @@ module.exports = function (options, params, callback) {
       }
 
       try {
-        payload = (params.rawP) ? body : (response.statusCode !== 204) ? JSON.parse(body) : null
+        payload = (params.rawP) ? body : ((response.statusCode !== 204) && body) ? JSON.parse(body) : null
       } catch (err) {
         return callback(err)
       }
