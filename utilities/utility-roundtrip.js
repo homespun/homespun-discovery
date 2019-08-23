@@ -1,6 +1,7 @@
 /* jshint asi: true, node: true, laxbreak: true, laxcomma: true, undef: true, unused: true */
 
-var underscore = require('underscore')
+var querystring = require('querystring')
+var underscore  = require('underscore')
 
 module.exports = function (options, params, callback) {
   var request, timeoutP
@@ -13,6 +14,7 @@ module.exports = function (options, params, callback) {
     params.headers = underscore.defaults(params.headers || {},
                                          { 'content-type': 'application/json; charset=utf-8', 'accept-encoding': '' })
   }
+  if (options.location.query) params.path += '?' + querystring.stringify(options.location.query)
 
   request = client.request(underscore.omit(params, [ 'useProxy', 'payload', 'rawP' ]), function (response) {
     var body = ''
@@ -22,6 +24,7 @@ module.exports = function (options, params, callback) {
       body += chunk.toString()
     }).on('end', function () {
       var payload
+        , okP = Math.floor(response.statusCode / 100) === 2
 
       if (params.timeout) request.setTimeout(0)
 
@@ -34,21 +37,25 @@ module.exports = function (options, params, callback) {
         })
         console.log('>>>')
         try {
-          payload = (params.rawP) ? body : JSON.stringify(JSON.parse(body), null, 2)
+          payload = (params.rawP) ? body : (body && JSON.stringify(JSON.parse(body), null, 2))
         } catch (ex) {
           payload = body
         }
         console.log('>>> ' + payload.split('\n').join('\n>>> '))
       }
-      if (Math.floor(response.statusCode / 100) !== 2) {
-        options.logger.error('_roundTrip error: HTTP response ' + response.statusCode + ' ' + (response.statusMessage || ''))
-        return callback(new Error('HTTP response ' + response.statusCode + ' ' + (response.statusMessage || '')))
-      }
 
       try {
-        payload = (params.rawP) ? body : (response.statusCode !== 204) ? JSON.parse(body) : null
-      } catch (err) {
-        return callback(err)
+        payload = (params.rawP) ? body : ((response.statusCode !== 204) && body) ? JSON.parse(body) : null
+      } catch (ex) {
+        if (okP) return callback(ex, response, body)
+
+        payload = body
+      }
+
+      if (!okP) {
+        options.logger.error('_roundTrip error: HTTP response ' + response.statusCode + ' ' + (response.statusMessage || ''))
+        return callback(new Error('HTTP response ' + response.statusCode + ' ' + (response.statusMessage || '')),
+                        response, payload)
       }
 
       try {
